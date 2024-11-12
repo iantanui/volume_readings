@@ -1,11 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Burette Reading</title>
-</head>
-<body>
-    
-</body>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .container {
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      input[type="number"],
+      input[type="text"] {
+        width: 90%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      input[readonly] {
+        background-color: #f0f0f0;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #108ceb;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #157093;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <form>
+        <fieldset>
+          <legend>Volume readings</legend>
+
+          <div class="form-group">
+            <label for="initialVolume">Initial volume (ml)</label>
+            <input type="number" id="initialVolume" step="0.01" required />
+          </div>
+
+          <div class="form-group">
+            <label for="finalVolume">Final volume (ml)</label>
+            <input type="number" id="finalVolume" step="0.01" required />
+          </div>
+
+          <div class="form-group">
+            <label for="volumeUsed">Volume used (ml)</label>
+            <input type="text" id="volumeUsed" readonly />
+          </div>
+
+          <div class="form-group">
+            <label for="totalVolume">Total volume used (ml)</label>
+            <input type="text" id="totalVolume" value="0.00" readonly />
+          </div>
+
+          <div class="form-group">
+            <label for="totalTrials">Total trials</label>
+            <input type="text" id="totalTrials" value="0" readonly />
+          </div>
+
+          <div class="form-group">
+            <label for="reactionEndpoint">Reaction endpoint (ml)</label>
+            <input type="text" id="reactionEndpoint" readonly />
+          </div>
+
+          <button type="button" onclick="addTrial()">Add Trial</button>
+        </fieldset>
+      </form>
+    </div>
+
+    <script>
+
+      let totalVolume = 0;
+      let trialCount = 0;
+
+      function addTrial() {
+        const initialVolume = parseFloat(document.getElementById('initialVolume').value);
+        const finalVolume = parseFloat(document.getElementById('finalVolume').value);
+
+        if (isNaN(initialVolume) || isNaN(finalVolume) || initialVolume < finalVolume) {
+          alert("Please enter valid volumes where Initial Volume is greater than Final Volume.");
+          return;
+        }
+
+        const volumeUsed = (initialVolume - finalVolume).toFixed(2);
+        document.getElementById('volumeUsed').value = volumeUsed;
+
+        totalVolume += parseFloat(volumeUsed);
+        trialCount += 1;
+
+        document.getElementById('totalTrials').value = trialCount;
+        document.getElementById('totalVolume').value = totalVolume.toFixed(2);
+
+        const reactionEndpoint = (totalVolume / trialCount).toFixed(2);
+        document.getElementById('reactionEndpoint').value = reactionEndpoint;
+
+        document.getElementById('initialVolume').value = '';
+        document.getElementById('finalVolume').value = '';
+      }
+    </script>
+  </body>
 </html>
